@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SQLitePractice</string>
+    <string-array name="queries">
+        <item>Get all countries</item>
+        <item>Get all cities</item>
+        <item>Get all cities from random country</item>
+    </string-array>
 </resources>

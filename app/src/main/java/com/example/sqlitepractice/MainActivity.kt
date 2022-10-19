@@ -3,6 +3,8 @@ package com.example.sqlitepractice
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
 import com.example.sqlitepractice.data.City
@@ -19,36 +21,42 @@ import org.json.JSONArray
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var btGet: Button
-    private lateinit var tvMain: TextView
+    private lateinit var tvTop: TextView
+    private lateinit var tvBottom: TextView
 
     private lateinit var dao: WorldDao
+    private lateinit var autoCompleteTextView: AutoCompleteTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        dao = WorldDatabase.getInstance(this).worldDao
-        checkDatabase()
-
-        btGet = findViewById(R.id.btGet)
-        btGet.setOnClickListener {
+        val queries = resources.getStringArray(R.array.queries)
+        val arrayAdapter = ArrayAdapter(this, R.layout.dropdown_item, queries)
+        autoCompleteTextView = findViewById(R.id.dropdownItems)
+        autoCompleteTextView.setAdapter(arrayAdapter)
+        autoCompleteTextView.setOnItemClickListener { adapterView, view, i, l ->
+            tvTop.text = queries[i]
             CoroutineScope(IO).launch {
                 val countryData = async { dao.getCountries() }.await()
                 if(countryData.isNotEmpty()){
                     withContext(Main){
                         val countryId = Random.nextInt(countryData.size-1)
-                        tvMain.text = "Cities: ${dao.getCountryWithCities(countryId)}"
+                        tvBottom.text = "Cities: ${dao.getCountryWithCities(i)}"
                     }
                 }else{
                     withContext(Main){
-                        tvMain.text = "No data found"
+                        tvBottom.text = "No data found"
                     }
                 }
             }
         }
 
-        tvMain = findViewById(R.id.tvMain)
+        dao = WorldDatabase.getInstance(this).worldDao
+        checkDatabase()
+
+        tvTop = findViewById(R.id.tvTop)
+        tvBottom = findViewById(R.id.tvBottom)
     }
 
     private fun checkDatabase(){
@@ -60,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             }else{
                 Log.d("MAIN", "DB data has already been loaded")
                 withContext(Main){
-                    tvMain.text = "Ready"
+                    tvTop.text = "Ready"
                 }
             }
         }
@@ -151,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                     convertToInt(population),
                     convertToInt(countryId)))
             }
-            tvMain.text = "Ready"
+            tvTop.text = "Ready"
         }
     }
 
