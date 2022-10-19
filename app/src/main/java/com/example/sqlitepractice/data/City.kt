@@ -8,8 +8,8 @@ data class City(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,
-    val countryCode: String,
-    val district: String,
-    val population: Int,
-    val countryId: Int
+    val countryCode: String?,
+    val district: String?,
+    val population: Int?,
+    val countryId: Int?
 )

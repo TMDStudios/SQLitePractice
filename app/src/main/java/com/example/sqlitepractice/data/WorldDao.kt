@@ -18,6 +18,6 @@ interface WorldDao {
     fun getCountries(): List<Country>
 
     @Transaction
-    @Query("SELECT * FROM countries WHERE id = 1")
-    suspend fun getCountryWithCities(): List<CountryWithCities>
+    @Query("SELECT * FROM countries WHERE id = :countryId")
+    suspend fun getCountryWithCities(countryId: Int): List<CountryWithCities>
 }
