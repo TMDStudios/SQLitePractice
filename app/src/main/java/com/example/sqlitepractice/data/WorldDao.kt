@@ -1,6 +1,7 @@
 package com.example.sqlitepractice.data
 
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.example.sqlitepractice.data.relations.CountryWithCities
 
 @Dao
@@ -20,4 +21,13 @@ interface WorldDao {
     @Transaction
     @Query("SELECT * FROM countries WHERE id = :countryId")
     suspend fun getCountryWithCities(countryId: Int): List<CountryWithCities>
+
+    //Advanced Queries
+
+    /*What query would you run to get all the countries with Surface Area below 501
+    and Population greater than 100,000?*/
+
+    @Query("SELECT name, surfaceArea, population FROM countries\n" +
+            "WHERE surfaceArea < 501 AND population > 100000;")
+    suspend fun query1(): List<Query1>
 }

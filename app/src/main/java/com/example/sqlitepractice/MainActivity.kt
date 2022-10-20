@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.example.sqlitepractice.data.City
 import com.example.sqlitepractice.data.Country
 import com.example.sqlitepractice.data.WorldDao
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 if(countryData.isNotEmpty()){
                     withContext(Main){
                         val countryId = Random.nextInt(countryData.size-1)
-                        tvBottom.text = "Cities: ${dao.getCountryWithCities(i)}"
+                        tvBottom.text = "Cities: ${dao.query1()}"
                     }
                 }else{
                     withContext(Main){
