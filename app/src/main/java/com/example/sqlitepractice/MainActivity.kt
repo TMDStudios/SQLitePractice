@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.Button
 import android.widget.TextView
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.example.sqlitepractice.data.City
 import com.example.sqlitepractice.data.Country
 import com.example.sqlitepractice.data.WorldDao
@@ -39,16 +37,22 @@ class MainActivity : AppCompatActivity() {
         autoCompleteTextView.setOnItemClickListener { adapterView, view, i, l ->
             tvTop.text = queries[i]
             CoroutineScope(IO).launch {
-                val countryData = async { dao.getCountries() }.await()
-                if(countryData.isNotEmpty()){
-                    withContext(Main){
-                        val countryId = Random.nextInt(countryData.size-1)
-                        tvBottom.text = "Cities: ${dao.query1()}"
+                val countryData = async {
+                    when(i){
+                        0 -> dao.getCountries()
+                        1 -> dao.getCities()
+                        2 -> dao.getCity(Random.nextInt(999))
+                        3 -> dao.getCountry(Random.nextInt(238))
+                        4 -> dao.query1()
+                        else -> listOf("No data found")
                     }
-                }else{
-                    withContext(Main){
-                        tvBottom.text = "No data found"
+                }.await()
+                withContext(Main){
+                    var data = ""
+                    for(item in countryData){
+                        data+="$item\n\n"
                     }
+                    tvBottom.text = data
                 }
             }
         }
