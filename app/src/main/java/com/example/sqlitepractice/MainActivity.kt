@@ -6,10 +6,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
-import com.example.sqlitepractice.data.City
-import com.example.sqlitepractice.data.Country
-import com.example.sqlitepractice.data.WorldDao
-import com.example.sqlitepractice.data.WorldDatabase
+import com.example.sqlitepractice.data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -96,6 +93,13 @@ class MainActivity : AppCompatActivity() {
             }else{
                 Log.d("MAIN", "Unable to get cityData")
             }
+
+            val languageData = async { fetchData("languagesJSON.json") }.await()
+            if(cityData.isNotEmpty()){
+                populateLanguagesDB(languageData)
+            }else{
+                Log.d("MAIN", "Unable to get languageData")
+            }
         }
     }
 
@@ -162,6 +166,29 @@ class MainActivity : AppCompatActivity() {
                     countryCode,
                     district,
                     convertToInt(population),
+                    convertToInt(countryId)))
+            }
+            tvTop.text = "Ready"
+        }
+    }
+
+    private suspend fun populateLanguagesDB(result: String){
+        Log.d("MAIN", "POPULATING languages")
+        withContext(Main){
+            val jsonArray = JSONArray(result)
+
+            for(i in 0 until jsonArray.length()){
+                val countryCode = jsonArray.getJSONObject(i).getString("country_code")
+                val language = jsonArray.getJSONObject(i).getString("language")
+                val isOfficial = jsonArray.getJSONObject(i).getString("is_official")
+                val percentage = jsonArray.getJSONObject(i).getString("percentage")
+                val countryId = jsonArray.getJSONObject(i).getString("country_id")
+                dao.addLanguage(Language(
+                    0,
+                    countryCode,
+                    language,
+                    isOfficial.toBoolean(),
+                    convertToFloat(percentage),
                     convertToInt(countryId)))
             }
             tvTop.text = "Ready"

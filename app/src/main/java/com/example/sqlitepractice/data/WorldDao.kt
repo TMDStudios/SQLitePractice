@@ -1,8 +1,6 @@
 package com.example.sqlitepractice.data
 
 import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteQuery
-import com.example.sqlitepractice.data.relations.CountryWithCities
 
 @Dao
 interface WorldDao {
@@ -11,6 +9,9 @@ interface WorldDao {
 
     @Insert(onConflict=OnConflictStrategy.REPLACE)
     suspend fun addCountry(country: Country)
+
+    @Insert(onConflict=OnConflictStrategy.REPLACE)
+    suspend fun addLanguage(language: Language)
 
     @Query("SELECT * FROM cities ORDER BY id ASC")
     fun getCities(): List<City>
