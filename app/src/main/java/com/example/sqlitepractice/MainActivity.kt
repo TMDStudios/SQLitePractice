@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                     when(i){
                         0 -> dao.getCountries()
                         1 -> dao.getCities()
-                        2 -> dao.getCity(Random.nextInt(4078))
+                        2 -> dao.getLanguages()
                         3 -> dao.getCountry(Random.nextInt(238))
                         4 -> dao.query1()
                         else -> listOf("No data found")

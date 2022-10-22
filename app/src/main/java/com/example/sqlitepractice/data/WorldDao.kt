@@ -19,8 +19,8 @@ interface WorldDao {
     @Query("SELECT * FROM countries ORDER BY id ASC")
     fun getCountries(): List<Country>
 
-    @Query("SELECT * FROM cities WHERE id = :cityId")
-    suspend fun getCity(cityId: Int): List<City>
+    @Query("SELECT * FROM languages ORDER BY id ASC")
+    suspend fun getLanguages(): List<Language>
 
     @Query("SELECT * FROM countries WHERE id = :countryId")
     suspend fun getCountry(countryId: Int): List<Country>
