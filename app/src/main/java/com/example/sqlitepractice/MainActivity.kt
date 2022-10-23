@@ -17,20 +17,26 @@ import org.json.JSONArray
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
+    // The top text view displays the current query
+    // The bottom text view is inside of a scroll view and displays the result of our queries
     private lateinit var tvTop: TextView
     private lateinit var tvBottom: TextView
 
     private lateinit var dao: WorldDao
-    private lateinit var autoCompleteTextView: AutoCompleteTextView
+    private lateinit var autoCompleteTextView: AutoCompleteTextView // Used for the dropdown menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // The query names are in the strings.xml file
         val queries = resources.getStringArray(R.array.queries)
+        // We use an ArrayAdapter to display the queries in the dropdown menu
         val arrayAdapter = ArrayAdapter(this, R.layout.dropdown_item, queries)
         autoCompleteTextView = findViewById(R.id.dropdownItems)
         autoCompleteTextView.setAdapter(arrayAdapter)
+        // The i variable in the OnItemClickListener gives us access to the item we select
+        // i starts at 0, making the 'Get all countries' item number 0
         autoCompleteTextView.setOnItemClickListener { adapterView, view, i, l ->
             tvTop.text = queries[i]
             CoroutineScope(IO).launch {
@@ -41,6 +47,10 @@ class MainActivity : AppCompatActivity() {
                         2 -> dao.getLanguages()
                         3 -> dao.getCountry(Random.nextInt(238))
                         4 -> dao.query1()
+
+                        // TODO
+                        // Add your Dao queries here (queries 2-8)
+
                         else -> listOf("No data found")
                     }
                 }.await()
@@ -55,11 +65,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         dao = WorldDatabase.getInstance(this).worldDao
+
+        /*You can ignore this function call. It is used to populate the database the first time
+          the first time the application is launched.*/
         checkDatabase()
 
         tvTop = findViewById(R.id.tvTop)
         tvBottom = findViewById(R.id.tvBottom)
     }
+
+    // You can ignore everything below this line
 
     private fun checkDatabase(){
         Log.d("MAIN", "checking db")
