@@ -47,10 +47,13 @@ class MainActivity : AppCompatActivity() {
                         2 -> dao.getLanguages()
                         3 -> dao.getCountry(Random.nextInt(238))
                         4 -> dao.query1()
-
-                        // TODO
-                        // Add your Dao queries here (queries 2-8)
-
+                        5 -> dao.query2()
+                        6 -> dao.query3()
+                        7 -> dao.query4()
+                        8 -> dao.query5()
+                        9 -> dao.query6()
+                        10 -> dao.query7()
+                        11 -> dao.query8()
                         else -> listOf("No data found")
                     }
                 }.await()
